@@ -12,17 +12,18 @@ import ro.visable.messagingapp.service.UserService;
 import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/userss")
+    @GetMapping
     List<User> all() {
         return userService.getUsers();
     }
 
-    @PostMapping("/users")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     User save(@Valid @RequestBody UserDto userDto) {
         try {

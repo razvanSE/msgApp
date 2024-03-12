@@ -3,12 +3,11 @@ package ro.visable.messagingapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-import ro.visable.messagingapp.model.dto.MessageDto;
 import ro.visable.messagingapp.exception.BadRequestException;
 import ro.visable.messagingapp.exception.ResourceNotFoundException;
 import ro.visable.messagingapp.model.Message;
 import ro.visable.messagingapp.model.User;
+import ro.visable.messagingapp.model.dto.MessageDto;
 import ro.visable.messagingapp.service.MessageService;
 import ro.visable.messagingapp.service.UserService;
 
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
+@RequestMapping("messages")
 public class MessageController {
 
     @Autowired
@@ -24,57 +24,49 @@ public class MessageController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/messages")
+    @GetMapping
     List<Message> all() {
         return messageService.getAll();
     }
 
-    @GetMapping("/messages/sent")
-    List<Message> sent(@RequestHeader(value="userId", required=false) Long userId) {
-        if (userId == null) {
-            throw new BadRequestException("UserId Header is missing");
-        }
+    @GetMapping("/sent")
+    List<Message> sent(@RequestHeader(value="userId") Long userId) {
         return messageService.getSentMessages(userId);
     }
 
-    @GetMapping("messages/received")
-    List<Message> receivedFrom(
-            @RequestHeader(value="userId", required=false) Long userId,
-            @RequestParam(name = "senderId", required = false) Long senderId
+    @GetMapping("/received")
+    List<Message> received(
+            @RequestHeader(value="userId") Long userId
     ) {
-        if (userId == null) {
-            throw new BadRequestException("UserId Header is missing");
-        }
+        return messageService.getReceivedMessages(userId);
+    }
 
-        if (senderId == null) {
-            return messageService.getReceivedMessages(userId);
-        }
-
+    @GetMapping(value = "/received", params="senderId")
+    List<Message> receivedFrom(
+            @RequestHeader(value="userId") Long userId,
+            @RequestParam(name="senderId") Long senderId
+    ) {
         try {
             User sender = userService.getUserById(senderId);
             return messageService.getReceivedMessagesFromUser(userId, sender.getId());
         } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+            throw new ResourceNotFoundException(e.getMessage());
         }
     }
 
-    @PostMapping("/messages")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Message save(@RequestHeader(value="userId", required=false) Long userId, @RequestBody MessageDto messageDto) {
-        if (userId == null) {
-            throw new BadRequestException("UserId Header is missing");
-        }
-
-        if (Objects.equals(userId, messageDto.getReceiverId())) {
+    Message save(@RequestHeader(value="userId") Long userId, @RequestBody MessageDto messageDto) {
+        if (Objects.equals(userId, messageDto.receiverId())) {
             throw new BadRequestException(
                 "Sender user and receiver user cannot be the same. Please send different user info"
             );
         }
         try {
             User sender = userService.getUserById(userId);
-            User receiver = userService.getUserById(messageDto.getReceiverId());
+            User receiver = userService.getUserById(messageDto.receiverId());
 
-            Message message = new Message(sender, receiver, messageDto.getContent());
+            Message message = new Message(sender, receiver, messageDto.content());
             return messageService.sendMessage(message);
 
         } catch (IllegalArgumentException e) {
