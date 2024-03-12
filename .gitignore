@@ -46,3 +46,6 @@ out/
 *.jar
 *.war
 *.ear
+
+# Postgres #
+/db-postgres/
