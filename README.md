@@ -1,32 +1,21 @@
 # Messaging RestApi 
 
-SpringBoot Java project.
+## Implementation
+The solution is a Dockerized Java Spring Boot using Gradle.
 
-## Requirements
-In order to run the project docker is needed :)
-@TODO 
+Implemented following endpoints :
+- POST /users
+- GET /messages/sent
+- GET messages/received
+- GET messages/received/senderId=?
 
-## Installation
-@TODO 
+## Running
+The following command will create a build and spin up the containers: `./gradlew build && ./gradlew composeUp`
 
-## Configuration
-@TODO
-
-## Usage
-1. Build and start the container : `./gradlew build && ./gradlew composeUp`
-2. The server will start running on localhost:8080
-3. Use a tool like Postman or cURL to send requests to the API endpoints.
-
-## API Endpoints
- - POST /users
- - GET /messages/sent
- - GET messages/received
- - GET messages/received/senderId=?
-
-## Examples
-@TODO
 ## Testing
-Run ./gradlew test
+In order to run the unit tests use the command : `./gradlew test`.
 
-## Troubleshooting
-@TODO
+## Improvements 
+- Improve HTTP error messages and use a standard format
+- Implement Kafka messaging
+- Improve Testing using Stubs

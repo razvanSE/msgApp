@@ -1,15 +1,13 @@
 package ro.visable.messagingapp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.Valid;
-import ro.visable.messagingapp.model.dto.UserDto;
 import ro.visable.messagingapp.exception.BadRequestException;
 import ro.visable.messagingapp.model.User;
+import ro.visable.messagingapp.model.dto.UserDto;
 import ro.visable.messagingapp.service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -17,11 +15,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @GetMapping
-    List<User> all() {
-        return userService.getUsers();
-    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -24,11 +24,6 @@ public class MessageController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    List<Message> all() {
-        return messageService.getAll();
-    }
-
     @GetMapping("/sent")
     List<Message> sent(@RequestHeader(value="userId") Long userId) {
         return messageService.getSentMessages(userId);

@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 import ro.visable.messagingapp.model.User;
 import ro.visable.messagingapp.repository.UserRepository;
 
-import java.util.List;
-
 @Service
 public class UserService {
 
@@ -17,10 +15,6 @@ public class UserService {
 
     public User createUser(User user) {
         return userRepository.save(user);
-    }
-
-    public List<User> getUsers() {
-        return userRepository.findAll();
     }
 
     public User getUserById(long userId) throws IllegalArgumentException {

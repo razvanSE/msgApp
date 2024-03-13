@@ -5,6 +5,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "users")
@@ -15,6 +16,7 @@ public class User {
     private Long id;
 
     @Column(unique = true)
+    @NotEmpty(message = "Nickname may not be empty")
     private String nickname;
 
     public Long getId() {

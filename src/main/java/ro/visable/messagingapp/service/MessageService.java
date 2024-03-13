@@ -19,10 +19,6 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public List<Message> getAll() {
-        return messageRepository.findAll();
-    }
-
     public List<Message> getSentMessages(Long userId) {
         return messageRepository.findBySenderId(userId);
     }
